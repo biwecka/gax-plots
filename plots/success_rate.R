@@ -77,13 +77,13 @@ sum_transform_run_data <- function(run_data) {
     return(new)
 }
 
-plot_barchart <- function(data, alg_name, dynamic) {
+plot_barchart <- function(data, problem_name, alg_name, dynamic) {
     # Construct plot title
     title <- ""
     if (dynamic == TRUE) {
-        title <- paste(alg_name, "Success Rates (dynamic)")
+        title <- paste(alg_name, "Success Rates (dynamic) @", problem_name)
     } else {
-        title <- paste(alg_name, "Success Rates (static)")
+        title <- paste(alg_name, "Success Rates (static) @", problem_name)
     }
 
 
@@ -120,64 +120,73 @@ plot_barchart <- function(data, alg_name, dynamic) {
 
 }
 
+# Loop through all the problem instances
+for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
+    # Extract the problem intsances name
+    problem_name <- basename(problem_dir)
 
-# Loop through all the algorithms (directories) in the data directory.
-for (alg_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
-    # The `alg_dir` variable now contains the full path to the algorithm
-    # directory (e.g. `data/alg_12`).
+    # Loop through all the algorithms (directories) in the data directory.
+    for (alg_dir in list.dirs(
+        problem_dir, full.names = TRUE, recursive = FALSE
+    )) {
+        # The `alg_dir` variable now contains the full path to the algorithm
+        # directory (e.g. `data/alg_12`).
 
-    # Extract the algorithm name
-    alg_name <- basename(alg_dir)
+        # Extract the algorithm name
+        alg_name <- basename(alg_dir)
 
-    # Initialize lists for static and dynamic configurations
-    static_cfgs <- list()
-    dynamic_cfgs <- list()
+        # Initialize lists for static and dynamic configurations
+        static_cfgs <- list()
+        dynamic_cfgs <- list()
 
-    # Loop through all the configurations directories of this algorithm.
-    for (cfg_dir in list.dirs(alg_dir, full.names = TRUE, recursive = FALSE)) {
-        # Extract the configuration name
-        cfg_name <- basename(cfg_dir)
-
-        # Read the params CSV
-        params <- read_params_csv(file.path(cfg_dir, "params.csv"))
-
-        # Read in data of all runs
-        for (run_dir in list.dirs(
-            cfg_dir, full.names = TRUE, recursive = FALSE
+        # Loop through all the configurations directories of this algorithm.
+        for (cfg_dir in list.dirs(
+            alg_dir, full.names = TRUE, recursive = FALSE
         )) {
-            # Read general.csv
-            run <- read_run_general(file.path(run_dir, "general.csv"))
+            # Extract the configuration name
+            cfg_name <- basename(cfg_dir)
 
-            # Add the configuration name to the run dataset
-            run$cfg <- cfg_name
+            # Read the params CSV
+            params <- read_params_csv(file.path(cfg_dir, "params.csv"))
 
-            # Push the run to the correct list
-            if (params$dynamic == TRUE) {
-                dynamic_cfgs[[length(dynamic_cfgs) + 1]] <- run
-            } else {
-                static_cfgs[[length(static_cfgs) + 1]] <- run
+            # Read in data of all runs
+            for (run_dir in list.dirs(
+                cfg_dir, full.names = TRUE, recursive = FALSE
+            )) {
+                # Read general.csv
+                run <- read_run_general(file.path(run_dir, "general.csv"))
+
+                # Add the configuration name to the run dataset
+                run$cfg <- cfg_name
+
+                # Push the run to the correct list
+                if (params$dynamic == TRUE) {
+                    dynamic_cfgs[[length(dynamic_cfgs) + 1]] <- run
+                } else {
+                    static_cfgs[[length(static_cfgs) + 1]] <- run
+                }
             }
         }
+
+        # Plot static configurations
+        static_data <- sum_transform_run_data(static_cfgs)
+        barchart <- plot_barchart(static_data, problem_name, alg_name, FALSE)
+        ggsave(
+            file.path(plot_dir, problem_name, alg_name, "static.png"),
+            plot = barchart,
+            device = "png",
+            create.dir = TRUE
+        )
+
+
+        # Plot dynamic configurations
+        dynamic_data <- sum_transform_run_data(dynamic_cfgs)
+        barchart <- plot_barchart(dynamic_data, problem_name, alg_name, TRUE)
+        ggsave(
+            file.path(plot_dir, problem_name, alg_name, "dynamic.png"),
+            plot = barchart,
+            device = "png",
+            create.dir = TRUE
+        )
     }
-
-    # Plot static configurations
-    static_data <- sum_transform_run_data(static_cfgs)
-    barchart <- plot_barchart(static_data, alg_name, FALSE)
-    ggsave(
-        file.path(plot_dir, alg_name, "static.png"),
-        plot = barchart,
-        device = "png",
-        create.dir = TRUE
-    )
-
-
-    # Plot dynamic configurations
-    dynamic_data <- sum_transform_run_data(dynamic_cfgs)
-    barchart <- plot_barchart(dynamic_data, alg_name, TRUE)
-    ggsave(
-        file.path(plot_dir, alg_name, "dynamic.png"),
-        plot = barchart,
-        device = "png",
-        create.dir = TRUE
-    )
 }
