@@ -42,6 +42,7 @@
                     rPackages.ggplot2
                     rPackages.dplyr
                     rPackages.tidyr
+                    rPackages.svglite
                 ];
 
                 ################################################################

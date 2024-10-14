@@ -2,6 +2,7 @@
 library(ggplot2)
 library(dplyr, warn.conflicts = FALSE)
 library(tidyr)
+library(svglite)
 
 # Set the path to the directory containing your configuration directories
 base_path <- "data/alg_12"
@@ -13,6 +14,18 @@ data_list <- list()
 for (cfg in list.dirs(base_path, full.names = TRUE, recursive = FALSE)) {
     # Get the configuration name
     cfg_name <- basename(cfg)
+
+    # Read the params.csv
+    params <- read.csv(
+        file.path(cfg, "params.csv"),
+        sep = ";",
+        header = TRUE,
+        strip.white = TRUE,
+    )
+
+    # if (as.logical(params$dynamic) == TRUE) {
+    #     next
+    # }
 
     # Loop through run folders
     for (run in list.dirs(cfg, full.names = TRUE, recursive = FALSE)) {
@@ -30,6 +43,9 @@ for (cfg in list.dirs(base_path, full.names = TRUE, recursive = FALSE)) {
         # run_data$run_id <- run_data$run
 
         run_data$success <- as.logical(run_data$success)
+
+        # Add dynamic information from params
+        # run_data$dynamic <- as.logical(params$dynamic)
 
         # Store in the list
         data_list[[length(data_list) + 1]] <- run_data
@@ -51,7 +67,8 @@ summary_data <- all_data %>%
         success_count = sum(success == TRUE),
         failure_count = sum(success == FALSE),
         total_count = n(),
-        success_percentage = (success_count / n()) * 100
+        success_percentage = (success_count / n()) * 100,
+        # dynamic = first(dynamic)
     )
 
 print(">>> SUMMARY DATA <<<")
@@ -64,13 +81,20 @@ plot_data <- summary_data %>%
         cols = c(success_count, failure_count),
         names_to = "status",
         values_to = "count"
+    ) %>%
+    mutate(
+        status = recode(
+            status,
+            success_count = "success",
+            failure_count = "failure"
+        )
     )
 
 print(">>> PLOT DATA <<<")
 print(plot_data)
 
 # Stacked
-ggplot(
+barchart <- ggplot(
     plot_data,
     aes(fill = status, y = count, x = configuration)
 ) +
@@ -78,21 +102,28 @@ ggplot(
 
     # Labels
     labs(
-        title = "Algorithm Configuration Performance",
+        title = "XHSTT GA Success Rates",
         x = "Configuration",
-        y = "Number of Runs",
-        fill = "Run Status"
+        y = "Executions",
+        fill = "Result Status"
     ) +
 
-    # Success Percentage
-    geom_text(
-        data = plot_data,
-        aes(
-            label = paste0(round(success_percentage, 2), "%"),
-            x = configuration,
-            y = 0
-        ),
-        # position = position_stack(vjust = 0.5), color = "white"
-        # label.padding = unit(0.25, "lines"),
-    )
+    # # Success Percentage
+    annotate(
+        "text",
+        x = plot_data$configuration,
+        y = 0,
+        label = paste0(plot_data$success_percentage, "%"),
+        vjust = -1,
+        hjust = 0.5,
+        size = 3,
+        color = "#2a2a2a"
+    ) +
 
+    theme_bw() +
+
+    # Rotate x-axis labels
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 0.8))
+
+
+ggsave("plots.png", plot = barchart, device = "png")
