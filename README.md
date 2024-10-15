@@ -2,7 +2,7 @@
 This repository contains plots for evaluating my self-parameterizing genetic
 algorithm against its static counterparts when solving XHSTT problem instances.
 
-This is a test.
+I removed the test.
 
 # hdtt4
 
