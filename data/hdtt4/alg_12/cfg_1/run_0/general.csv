@@ -1,2 +1,2 @@
-run ; success ; ov    ; gen
-r0  ; true    ; 0     ; 23015
+success ; ov    ; gen
+true    ; 0     ; 23015
