@@ -169,24 +169,33 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
         }
 
         # Plot static configurations
-        static_data <- sum_transform_run_data(static_cfgs)
-        barchart <- plot_barchart(static_data, problem_name, alg_name, FALSE)
-        ggsave(
-            file.path(plot_dir, problem_name, alg_name, "static.png"),
-            plot = barchart,
-            device = "png",
-            create.dir = TRUE
-        )
+        if (length(static_cfgs) != 0) {
+            static_data <- sum_transform_run_data(static_cfgs)
+            barchart <- plot_barchart(
+                static_data, problem_name, alg_name, FALSE
+            )
 
+            ggsave(
+                file.path(plot_dir, problem_name, alg_name, "static.png"),
+                plot = barchart,
+                device = "png",
+                create.dir = TRUE
+            )
+        }
 
         # Plot dynamic configurations
-        dynamic_data <- sum_transform_run_data(dynamic_cfgs)
-        barchart <- plot_barchart(dynamic_data, problem_name, alg_name, TRUE)
-        ggsave(
-            file.path(plot_dir, problem_name, alg_name, "dynamic.png"),
-            plot = barchart,
-            device = "png",
-            create.dir = TRUE
-        )
+        if (length(dynamic_cfgs) != 0) {
+            dynamic_data <- sum_transform_run_data(dynamic_cfgs)
+            barchart <- plot_barchart(
+                dynamic_data, problem_name, alg_name, TRUE
+            )
+
+            ggsave(
+                file.path(plot_dir, problem_name, alg_name, "dynamic.png"),
+                plot = barchart,
+                device = "png",
+                create.dir = TRUE
+            )
+        }
     }
 }
