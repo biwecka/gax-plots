@@ -116,7 +116,8 @@ plot_barchart <- function(data, problem_name, alg_name, dynamic) {
         theme_bw() +
 
         # Rotate x-axis labels
-        theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 0.8))
+        # theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 0.8))
+        scale_x_discrete(guide = guide_axis(angle = 90))
 
 }
 
