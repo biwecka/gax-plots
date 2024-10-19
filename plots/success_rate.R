@@ -180,7 +180,8 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                 file.path(plot_dir, problem_name, alg_name, "static.png"),
                 plot = barchart,
                 device = "png",
-                create.dir = TRUE
+                create.dir = TRUE,
+                # height = 14,
             )
         }
 
@@ -195,7 +196,8 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                 file.path(plot_dir, problem_name, alg_name, "dynamic.png"),
                 plot = barchart,
                 device = "png",
-                create.dir = TRUE
+                create.dir = TRUE,
+                height = 10
             )
         }
     }
