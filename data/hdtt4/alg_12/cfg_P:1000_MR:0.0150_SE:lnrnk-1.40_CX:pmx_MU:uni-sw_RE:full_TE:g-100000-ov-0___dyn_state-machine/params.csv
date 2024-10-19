@@ -1,0 +1,2 @@
+population;mu_rate;dynamic;selection;crossover;mutation;replacement;dynamics
+1000;0.015;true;lnrnk-1.40;pmx;uni-sw;full;state-machine
