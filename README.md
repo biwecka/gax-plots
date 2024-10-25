@@ -4,6 +4,14 @@ algorithm against its static counterparts when solving XHSTT problem instances.
 
 # hdtt4
 
+## Alg 11 (direct encoding)
+![hdtt4_alg_11_static_success_rate](https://raw.githubusercontent.com/biwecka/gax-plots/results/rendered/hdtt4/alg_11/static_success_rate.png)
+![hdtt4_alg_11_static_generations_taken](https://raw.githubusercontent.com/biwecka/gax-plots/results/rendered/hdtt4/alg_11/static_generations_taken.png)
+
+![hdtt4_alg_11_dynamic_success_rate](https://raw.githubusercontent.com/biwecka/gax-plots/results/rendered/hdtt4/alg_11/dynamic_success_rate.png)
+![hdtt4_alg_11_dynamic_generations_taken](https://raw.githubusercontent.com/biwecka/gax-plots/results/rendered/hdtt4/alg_11/dynamic_generations_taken.png)
+
+
 ## Alg 12 (indirect encoding)
 ![hdtt4_alg_12_static_success_rate](https://raw.githubusercontent.com/biwecka/gax-plots/results/rendered/hdtt4/alg_12/static_success_rate.png)
 ![hdtt4_alg_12_static_generations_taken](https://raw.githubusercontent.com/biwecka/gax-plots/results/rendered/hdtt4/alg_12/static_generations_taken.png)
