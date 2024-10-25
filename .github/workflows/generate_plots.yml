@@ -30,6 +30,7 @@ jobs:
         run: |
           mkdir -p rendered
           R < plots/success_rate.R --no-save
+          R < plots/generations_taken.R --no-save
 
       - name: Add changed files
         run: |
