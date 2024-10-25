@@ -1,2 +1,0 @@
-population;mu_rate;dynamic;selection;crossover;mutation;replacement;dynamics
-1000;0.01;true;lnrnk-1.50;ord;uni-sw;eli-abs-1;mut-rate-cos-0.01-0.005-200-None

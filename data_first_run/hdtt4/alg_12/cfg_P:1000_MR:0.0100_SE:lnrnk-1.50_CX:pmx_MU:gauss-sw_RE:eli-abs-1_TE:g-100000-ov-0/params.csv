@@ -1,2 +1,0 @@
-population;mu_rate;dynamic;selection;crossover;mutation;replacement;dynamics
-1000;0.01;false;lnrnk-1.50;pmx;gauss-sw;eli-abs-1;
