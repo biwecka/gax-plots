@@ -46,6 +46,19 @@ transform_data <- function(data) {
     # Combine all frames into one
     data <- bind_rows(data)
 
+    # Calculate, if for a given configuration all runs were successful. If so,
+    # set the new `all_success` column to TRUE.
+    data$all_success <- ave(
+        data$success,
+        data$cfg,
+        FUN = function(x) all(x == TRUE)
+    )
+
+    # Remove runs that were not successful. This way, the boxplots will only
+    # consider the amount of generations the successful runs needed to solve
+    # the problem.
+    data <- subset(data, success == TRUE)
+
     return(data)
 }
 
@@ -54,17 +67,36 @@ plot_boxplot <- function(data, problem_name, alg_name, dynamic) {
     # Construct plot title
     title <- ""
     if (dynamic == TRUE) {
-        title <- paste(alg_name, "Generations taken (dynamic) @", problem_name)
+        title <- paste(
+            alg_name,
+            "Generations taken on successful runs (dynamic) @",
+            problem_name
+        )
     } else {
-        title <- paste(alg_name, "Generations taken (static) @", problem_name)
+        title <- paste(
+            alg_name,
+            "Generations taken on successful runs (static) @",
+            problem_name
+        )
     }
 
     ggplot(
         data,
-        aes(x = cfg, y = gen)
+        aes(x = cfg, y = gen, fill = all_success)
     ) +
         geom_boxplot() +
-        theme_bw()
+
+        # Labels
+        labs(
+            title = title,
+            x = "Configuration",
+            y = "Generations",
+        ) +
+
+        theme_bw() +
+
+        # Rotate x-axis labels
+        scale_x_discrete(guide = guide_axis(angle = 90))
 }
 
 
@@ -129,10 +161,10 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                     alg_name,
                     "static_generations_taken.png"
                 ),
-                plot = barchart,
+                plot = boxplot,
                 device = "png",
                 create.dir = TRUE,
-                # height = 14,
+                height = 10,
             )
         }
 
@@ -148,10 +180,10 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                     alg_name,
                     "dynamic_generations_taken.png"
                 ),
-                plot = barchart,
+                plot = boxplot,
                 device = "png",
                 create.dir = TRUE,
-                height = 10
+                height = 14
             )
         }
     }

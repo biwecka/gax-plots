@@ -101,7 +101,7 @@ plot_barchart <- function(data, problem_name, alg_name, dynamic) {
             fill = "Result Status"
         ) +
 
-        # # Success Percentage
+        # Success Percentage
         annotate(
             "text",
             x = data$cfg,
@@ -177,7 +177,12 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
             )
 
             ggsave(
-                file.path(plot_dir, problem_name, alg_name, "static.png"),
+                file.path(
+                    plot_dir,
+                    problem_name,
+                    alg_name,
+                    "static_success_rate.png"
+                ),
                 plot = barchart,
                 device = "png",
                 create.dir = TRUE,
@@ -193,7 +198,12 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
             )
 
             ggsave(
-                file.path(plot_dir, problem_name, alg_name, "dynamic.png"),
+                file.path(
+                    plot_dir,
+                    problem_name,
+                    alg_name,
+                    "dynamic_success_rate.png"
+                ),
                 plot = barchart,
                 device = "png",
                 create.dir = TRUE,
