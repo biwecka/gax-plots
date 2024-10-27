@@ -1,0 +1,2 @@
+population;mu_rate;dynamic;selection;crossover;mutation;replacement;dynamics
+1000;0.01;true;trn-8;ord;uni-sw;eli-abs-1;var-mut-rate-target-mean-sin-1.8-1-0.6-1000
