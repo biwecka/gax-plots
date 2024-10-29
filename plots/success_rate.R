@@ -107,10 +107,11 @@ plot_barchart <- function(data, problem_name, alg_name, dynamic) {
             x = data$cfg,
             y = 0,
             label = round(data$success_rate, 4), #paste0(data$success_rate, "%")
-            vjust = -1,
-            hjust = 0.5,
+            vjust = 0.5,
+            hjust = 0,
             size = 3,
-            color = "#2a2a2a"
+            color = "#2a2a2a",
+            angle = 90
         ) +
 
         theme_bw() +
