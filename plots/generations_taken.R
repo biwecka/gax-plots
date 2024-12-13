@@ -69,13 +69,13 @@ plot_boxplot <- function(data, problem_name, alg_name, dynamic) {
     if (dynamic == TRUE) {
         title <- paste(
             alg_name,
-            "Generations taken on successful runs (dynamic) @",
+            "(dynamic) @",
             problem_name
         )
     } else {
         title <- paste(
             alg_name,
-            "Generations taken on successful runs (static) @",
+            "(static) @",
             problem_name
         )
     }
@@ -91,12 +91,21 @@ plot_boxplot <- function(data, problem_name, alg_name, dynamic) {
             title = title,
             x = "Configuration",
             y = "Generations",
+            fill = "Always\nsuccessful"
+        ) +
+
+        # Custom fill colors
+        scale_fill_manual(
+            values = c(`TRUE` = "#00BFC4", `FALSE` = "#F8766D"),
+            labels = c(`TRUE` = "true", `FALSE` = "false")
         ) +
 
         theme_bw() +
 
         # Rotate x-axis labels
-        scale_x_discrete(guide = guide_axis(angle = 90))
+        # scale_x_discrete(guide = guide_axis(angle = 90)) +
+
+        coord_flip()
 }
 
 
@@ -154,6 +163,11 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
             static_data <- transform_data(static_cfgs)
             boxplot <- plot_boxplot(static_data, problem_name, alg_name, FALSE)
 
+            num_bars = length(unique(static_data$cfg))
+
+            width <- 12
+            height <- num_bars * 0.3 + 1
+
             ggsave(
                 file.path(
                     plot_dir,
@@ -164,7 +178,8 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                 plot = boxplot,
                 device = "png",
                 create.dir = TRUE,
-                height = 10,
+                width = width,
+                height = height,
             )
         }
 
@@ -172,6 +187,11 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
         if (length(dynamic_cfgs) != 0) {
             dynamic_data <- transform_data(dynamic_cfgs)
             boxplot <- plot_boxplot(dynamic_data, problem_name, alg_name, TRUE)
+
+            num_bars = length(unique(dynamic_data$cfg))
+
+            width <- 12
+            height <- num_bars * 0.3 + 1
 
             ggsave(
                 file.path(
@@ -183,7 +203,8 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                 plot = boxplot,
                 device = "png",
                 create.dir = TRUE,
-                height = 14
+                width = width,
+                height = height,
             )
         }
     }
