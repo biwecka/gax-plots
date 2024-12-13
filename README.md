@@ -41,3 +41,9 @@ algorithm against its static counterparts when solving XHSTT problem instances.
 
 ![hdtt5_alg_12_static_gen_per_sec](https://raw.githubusercontent.com/biwecka/gax-plots/results/rendered/hdtt5/alg_12/static_gen_per_sec.png)
 ![hdtt5_alg_12_dynamic_gen_per_sec](https://raw.githubusercontent.com/biwecka/gax-plots/results/rendered/hdtt5/alg_12/dynamic_gen_per_sec.png)
+
+
+# Usage
+-   generate success rate plots: `Rscript plots/success_rate.R`
+-   generate generations taken plots: `Rscript plots/generations-taken.R`
+-   generate generations per second plots: `Rscript plots/gen_per_sec.R`

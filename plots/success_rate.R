@@ -81,9 +81,9 @@ plot_barchart <- function(data, problem_name, alg_name, dynamic) {
     # Construct plot title
     title <- ""
     if (dynamic == TRUE) {
-        title <- paste(alg_name, "Success Rates (dynamic) @", problem_name)
+        title <- paste(alg_name, "(dynamic) @", problem_name)
     } else {
-        title <- paste(alg_name, "Success Rates (static) @", problem_name)
+        title <- paste(alg_name, "(static) @", problem_name)
     }
 
 
@@ -106,19 +106,21 @@ plot_barchart <- function(data, problem_name, alg_name, dynamic) {
             "text",
             x = data$cfg,
             y = 0,
-            label = round(data$success_rate, 4), #paste0(data$success_rate, "%")
+            label = format(round(data$success_rate, 4), nsmall = 4), #paste0(data$success_rate, "%")
             vjust = 0.5,
-            hjust = 0,
+            hjust = -0.25,
             size = 3,
             color = "#2a2a2a",
-            angle = 90
+            # angle = 90
         ) +
 
         theme_bw() +
 
         # Rotate x-axis labels
         # theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 0.8))
-        scale_x_discrete(guide = guide_axis(angle = 90))
+        # scale_x_discrete(guide = guide_axis(angle = 90)) +
+
+        coord_flip()
 
 }
 
@@ -177,6 +179,11 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                 static_data, problem_name, alg_name, FALSE
             )
 
+            num_bars = length(unique(static_data$cfg))
+
+            width <- 12
+            height <- num_bars * 0.3 + 1
+
             ggsave(
                 file.path(
                     plot_dir,
@@ -187,7 +194,8 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                 plot = barchart,
                 device = "png",
                 create.dir = TRUE,
-                # height = 14,
+                width = width,
+                height = height,
             )
         }
 
@@ -197,6 +205,11 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
             barchart <- plot_barchart(
                 dynamic_data, problem_name, alg_name, TRUE
             )
+
+            num_bars = length(unique(dynamic_data$cfg))
+
+            width <- 12
+            height <- num_bars * 0.3 + 1
 
             ggsave(
                 file.path(
@@ -208,7 +221,8 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                 plot = barchart,
                 device = "png",
                 create.dir = TRUE,
-                height = 10
+                width = width,
+                height = height,
             )
         }
     }
