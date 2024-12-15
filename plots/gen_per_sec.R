@@ -70,11 +70,24 @@ plot_points <- function(data, problem_name, alg_name, dynamic) {
         )
     }
 
+    # Calculate median runtimes
+    medians <- data %>%
+        group_by(cfg) %>%
+        summarize(
+            median_success_runtime = median(
+                runtime[success == TRUE], # na.rm = TRUE
+            ),
+            median_failure_runtime = median(
+                runtime[success == FALSE], # na.rm = TRUE
+            )
+        )
+
     ggplot(
         data,
         aes(x = cfg, y = gen_per_sec)
     ) +
-        geom_point(alpha = 0.2, color = "blue") +  # Points with transparency
+        # geom_point(alpha = 0.2, color = "blue") +  # Points with transparency
+        geom_boxplot() +
 
         # Labels
         labs(
@@ -84,6 +97,50 @@ plot_points <- function(data, problem_name, alg_name, dynamic) {
         ) +
 
         theme_bw() +
+
+        # Expand x-axis limits to create space for annotations
+        scale_y_continuous(expand = expansion(mult = c(0.4, 0.0))) +
+
+        # Add annotation boxes for success and failure aligned with x values
+        geom_label(
+            data = medians,
+            aes(
+                x = cfg,
+                y = min(data$gen_per_sec) * 0.75,
+                label = round(median_success_runtime, 2),
+                fill = "Success"
+            ),
+            # inherit.aes = FALSE,
+            size = 2.4,
+            # color = "white"
+            vjust = 0.0,
+        ) +
+        geom_label(
+            data = medians,
+            aes(
+                x = cfg,
+                y = min(data$gen_per_sec) * 0.75,
+                label = round(median_failure_runtime, 2),
+                fill = "Failure"
+            ),
+            # inherit.aes = FALSE,
+            size = 2.4,
+            # color = "white"
+            vjust = 1.0,
+        ) +
+
+        # Define fill colors for labels
+        scale_fill_manual(
+            name = "Median Runtime\nin seconds",
+            values = c("Success" = "green", "Failure" = "red"),
+            labels = c("Success" = "on success", "Failure" = "on failure"),
+            guide = guide_legend(
+                override.aes = list(
+                    hjust = 0,  # Center the text in the legend
+                    vjust = 0.35   # Center vertically in the legend
+                )
+            )
+        ) +
 
         # Rotate x-axis labels
         # scale_x_discrete(guide = guide_axis(angle = 90)) +
@@ -146,7 +203,7 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
             static_data <- transform_data(static_cfgs)
             boxplot <- plot_points(static_data, problem_name, alg_name, FALSE)
 
-            num_bars = length(unique(static_data$cfg))
+            num_bars <- length(unique(static_data$cfg))
 
             width <- 12
             height <- num_bars * 0.3 + 1
@@ -171,7 +228,7 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
             dynamic_data <- transform_data(dynamic_cfgs)
             boxplot <- plot_points(dynamic_data, problem_name, alg_name, TRUE)
 
-            num_bars = length(unique(dynamic_data$cfg))
+            num_bars <- length(unique(dynamic_data$cfg))
 
             width <- 12
             height <- num_bars * 0.3 + 1

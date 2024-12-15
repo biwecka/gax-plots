@@ -163,7 +163,7 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
             static_data <- transform_data(static_cfgs)
             boxplot <- plot_boxplot(static_data, problem_name, alg_name, FALSE)
 
-            num_bars = length(unique(static_data$cfg))
+            num_bars <- length(unique(static_data$cfg))
 
             width <- 12
             height <- num_bars * 0.3 + 1
@@ -188,7 +188,7 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
             dynamic_data <- transform_data(dynamic_cfgs)
             boxplot <- plot_boxplot(dynamic_data, problem_name, alg_name, TRUE)
 
-            num_bars = length(unique(dynamic_data$cfg))
+            num_bars <- length(unique(dynamic_data$cfg))
 
             width <- 12
             height <- num_bars * 0.3 + 1

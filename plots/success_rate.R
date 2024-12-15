@@ -106,7 +106,7 @@ plot_barchart <- function(data, problem_name, alg_name, dynamic) {
             "text",
             x = data$cfg,
             y = 0,
-            label = format(round(data$success_rate, 4), nsmall = 4), #paste0(data$success_rate, "%")
+            label = format(round(data$success_rate, 4), nsmall = 4),
             vjust = 0.5,
             hjust = -0.25,
             size = 3,
@@ -179,7 +179,7 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                 static_data, problem_name, alg_name, FALSE
             )
 
-            num_bars = length(unique(static_data$cfg))
+            num_bars <- length(unique(static_data$cfg))
 
             width <- 12
             height <- num_bars * 0.3 + 1
@@ -206,7 +206,7 @@ for (problem_dir in list.dirs(data_dir, full.names = TRUE, recursive = FALSE)) {
                 dynamic_data, problem_name, alg_name, TRUE
             )
 
-            num_bars = length(unique(dynamic_data$cfg))
+            num_bars <- length(unique(dynamic_data$cfg))
 
             width <- 12
             height <- num_bars * 0.3 + 1
