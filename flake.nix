@@ -43,6 +43,7 @@
                     rPackages.dplyr
                     rPackages.tidyr
                     rPackages.svglite
+                    rPackages.data_table
                 ];
 
                 ################################################################
