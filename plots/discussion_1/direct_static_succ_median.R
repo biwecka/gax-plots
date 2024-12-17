@@ -42,15 +42,20 @@ for (run_dir in list.dirs(cfg_path, full.names = TRUE, recursive = FALSE)) {
 # Filter for successful runs
 successful_runs <- runs[success == TRUE]
 
-# Extract the best run (by runtime). `which.min` returns an index!
-best_successful_run <- successful_runs[which.min(runtime)]
+# Calculate the median generation count
+median_gen <- median(successful_runs$gen)
+
+# Extract the median run (by generations). `which.min` returns an index!
+median_successful_run <- successful_runs[
+    which.min(abs(gen - median_gen))
+]
 
 
 
 ### Load Run Data ##############################################################
 # Define path to `generations.csv`
 generations_csv_path <-
-    file.path(best_successful_run$run_dir, "generations.csv")
+    file.path(median_successful_run$run_dir, "generations.csv")
 
 # Read generations data
 generations <- fread(generations_csv_path)
@@ -61,14 +66,14 @@ generations <- fread(generations_csv_path)
 div_scale <- round(max(generations$worst) / 100) * 100
 
 plot <- ggplot(generations, aes(x = gen)) +
-    geom_line(aes(y = best, color = "Best"), size = 0.2) +
-    geom_line(aes(y = worst, color = "Worst"), size = 0.2) +
-    geom_line(aes(y = mean, color = "Mean"), size = 0.2) +
-    geom_line(aes(y = median, color = "Median"), size = 0.2) +
+    geom_line(aes(y = best, color = "Best"), linewidth = 0.2) +
+    geom_line(aes(y = worst, color = "Worst"), linewidth = 0.2) +
+    geom_line(aes(y = mean, color = "Mean"), linewidth = 0.2) +
+    geom_line(aes(y = median, color = "Median"), linewidth = 0.2) +
     geom_line(
         # Scaling diversity values for better visualization
         aes(y = diversity * div_scale, color = "Diversity"),
-        size = 0.2
+        linewidth = 0.2
     ) +
     scale_y_continuous(
         # Label for primary y-axis
@@ -81,7 +86,15 @@ plot <- ggplot(generations, aes(x = gen)) +
         )
     ) +
     labs(
-        title = "Generations Metrics",
+        title = paste(
+            "Median success metrics for",
+            alg_name,
+            "@",
+            instance,
+            "with",
+            cfg_name,
+            sep = " "
+        ),
         x = "Generation",
         y = "Metric Value",
         color = "" # Legend title
@@ -93,7 +106,8 @@ plot <- ggplot(generations, aes(x = gen)) +
         "Median" = "purple",
         "Diversity" = "orange"
     )) +
-    theme_bw()
+    theme_bw() +
+    theme(plot.title = element_text(size = 10)) #, face = "bold"))
 
 
 ggsave(
@@ -102,7 +116,7 @@ ggsave(
         instance,
         alg_name,
         "discussion_1",
-        "direct_static_best.png"
+        "direct_static_succ_median.png"
     ),
     plot = plot,
     device = "png",
