@@ -108,9 +108,9 @@ plot <- ggplot(generations, aes(x = gen)) +
 ggsave(
     file.path(
         plot_dir,
+        "discussion_1",
         instance,
         alg_name,
-        "discussion_1",
         "direct_static_succ_best.png"
     ),
     plot = plot,

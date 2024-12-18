@@ -113,9 +113,9 @@ plot <- ggplot(generations, aes(x = gen)) +
 ggsave(
     file.path(
         plot_dir,
+        "discussion_1",
         instance,
         alg_name,
-        "discussion_1",
         "direct_dynamic_succ_median.png"
     ),
     plot = plot,
