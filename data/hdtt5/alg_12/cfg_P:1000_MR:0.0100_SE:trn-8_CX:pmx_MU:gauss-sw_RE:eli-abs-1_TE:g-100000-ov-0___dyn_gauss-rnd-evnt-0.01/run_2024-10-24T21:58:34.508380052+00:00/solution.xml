@@ -2170,7 +2170,7 @@
 				<Description>GAX (GA for XHSTT)</Description>
 			</MetaData>
 			<Solution Reference="Artificialhdtt5_XHSTT2014A">
-				<RunningTime>30m 46s</RunningTime>
+				<RunningTime>1846</RunningTime>
 				<Events>
 					<Event Reference="C0T3R0">
 						<Duration>1</Duration>

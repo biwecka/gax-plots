@@ -1540,7 +1540,7 @@
 				<Description>GAX (GA for XHSTT)</Description>
 			</MetaData>
 			<Solution Reference="Artificialhdtt4_XHSTT2014A">
-				<RunningTime>2m 31s</RunningTime>
+				<RunningTime>151</RunningTime>
 				<Events>
 					<Event Reference="C0T0R0">
 						<Duration>1</Duration>
